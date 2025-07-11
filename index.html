@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн книжный магазин</title>
+    <link rel="stylesheet" href="mainstyle.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="index.html">
+                <div>
+                    <img src="images/logo.png" alt="logo">
+                </div>
+            </a>
+        </div>
+
+        <ul class="list">
+            <li><a href="#" style="text-decoration: none"> Новинки</a></li>
+            <li><a href="#" style="text-decoration: none"> Подборки</a></li>
+            <li><a href="#" style="text-decoration: none"> Эксклюзивы</a></li>
+        </ul>
+
+        <div class="actions">
+            <div class="actionsbutton">
+                Личный кабинет
+                <div class="submenu">
+                    <div class="subarrow">&#9650;</div>
+                    <div class="submenucontent">
+                        <button class="submenu-item-auth" onclick="authenticationButton()">Аутентификация</button>
+                        <button class="submenu-item-reg" onclick="registrationButton()">Регистрация</button>
+                        <button class="submenu-item" onclick="supportButton()">Служба поддержки</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function authenticationButton() {
+                    window.location.href = 'authentication.html';
+                }
+
+                function registrationButton() {
+                    window.location.href = 'registration.html';
+                }
+
+                function supportButton() {
+                    window.location.href = 'support.html';
+                }
+            </script>
+        </div>
+
+        <div class="authStatus">
+            <span class="Username">Привет, гость!</span>
+        </div>
+    </div>
+
+    <div class="newsgallery">
+        <div class="slider">
+            <div class="slides">
+                <div class="slide">
+                    <img src="images/slide_01.png" alt="Slide 1">
+
+                    <div class="slidetext">
+                        <h1>Акция!</h1>
+                    </div>
+
+                    <div class="slidedivtext">
+                        <span>Скидка 50% на всю классику российских писателей</span>
+                    </div>
+
+                    <button onclick="scrollToDiv('best')" class="slidebutton">К подборке</button>
+                </div>
+
+                <div class="slide">
+                    <img src="images/slide_02.png" alt="Slide 2">
+
+                    <div class="slidetext">
+                        <h1>Новое в продаже!</h1>
+                    </div>
+
+                    <div class="slidedivtext">
+                        <span>Только что из издательства</span>
+                    </div>
+
+                    <button onclick="scrollToDiv('new')" class="slidebutton">К подборке</button>
+                </div>
+
+                <div class="slide">
+                    <img src="images/slide_03.png" alt="Slide 3">
+
+                    <div class="slidetext">
+                        <h1>Время предзаказов!</h1>
+                    </div>
+
+                    <div class="slidedivtext">
+                        <span>Успейте оформить по самой выгодной цене</span>
+                    </div>
+
+                    <button onclick="scrollToDiv('preorder')" class="slidebutton">К подборке</button>
+                </div>
+            </div>
+
+            <div class="nav">
+                <button class="prev">&#10094;</button>
+                <button class="next">&#10095;</button>
+            </div>
+        </div>
+
+        <script>
+            let currentIndex = 1;
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            let autoSlideInterval;
+            const slidesContainer = document.querySelector('.slides');
+            const firstSlideClone = slides[0].cloneNode(true);
+            const lastSlideClone = slides[totalSlides - 1].cloneNode(true);
+
+            slidesContainer.appendChild(firstSlideClone);
+            slidesContainer.insertBefore(lastSlideClone, slidesContainer.firstChild);
+
+            const totalSlidesWithClones = totalSlides + 2;
+
+            const updateSlides = () => {
+                slidesContainer.style.transition = 'transform 0.5s ease-in-out';
+                slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+                if (currentIndex === totalSlides + 1) {
+                    setTimeout(() => {
+                        slidesContainer.style.transition = 'none';
+                        currentIndex = 1;
+                        slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    }, 500);
+                }
+
+                else if (currentIndex === 0) {
+                    setTimeout(() => {
+                        slidesContainer.style.transition = 'none';
+                        currentIndex = totalSlides;
+                        slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    }, 500);
+                }
+            };
+
+            const nextSlide = () => {
+                currentIndex++;
+                updateSlides();
+            };
+
+            const prevSlide = () => {
+                currentIndex--;
+                updateSlides();
+            };
+
+            const startAutoSlide = () => {
+                autoSlideInterval = setInterval(nextSlide, 5000);
+            };
+
+            const stopAutoSlide = () => {
+                clearInterval(autoSlideInterval);
+            };
+
+            document.querySelector('.next').addEventListener('click', nextSlide);
+            document.querySelector('.prev').addEventListener('click', prevSlide);
+
+            const sliderContainer = document.querySelector('.slider');
+            sliderContainer.addEventListener('mouseenter', stopAutoSlide);
+            sliderContainer.addEventListener('mouseleave', startAutoSlide);
+
+            slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            startAutoSlide();
+        </script>
+    </div>
+
+    <!--Bestsellers-->
+    <div id="best"></div>
+    <div class="titlepanel">
+        <div class="titleheadtext">
+            <span>Бестселлеры</span>
+        </div>
+
+        <div class="titledivtext">
+            <span>Лидеры продаж</span>
+        </div>
+    </div>
+    <div class="itemspanel">
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/1_1.png">
+                    <div class="itemsalelable">50%</div>
+                    <div class="itemstatusbestlable">Бестселлер</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span><s>350 ₽</s></span>
+                        </div>
+
+                        <div class="saleprice">
+                            <span>175 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>А.Н. Афанасьев</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Полное издание в одном томе</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/1_2.png">
+                    <div class="itemsalelable">50%</div>
+                    <div class="itemstatusbestlable">Бестселлер</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span><s>350 ₽</s></span>
+                        </div>
+
+                        <div class="saleprice">
+                            <span>175 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>А.С. Пушкин</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Полное собрание стихотворений <br>в одном томе</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/1_3.png">
+                    <div class="itemsalelable">50%</div>
+                    <div class="itemstatusbestlable">Бестселлер</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span><s>350 ₽</s></span>
+                        </div>
+
+                        <div class="saleprice">
+                            <span>175 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>С.А. Есенин</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Стихотворения, поэмы, проза</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/1_4.png">
+                    <div class="itemsalelable">50%</div>
+                    <div class="itemstatusbestlable">Бестселлер</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span><s>350 ₽</s></span>
+                        </div>
+
+                        <div class="saleprice">
+                            <span>175 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>Ф.И. Тютчев</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Сброник стихотворений</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--New books-->
+    <div id="new"></div>
+    <div class="titlepanel">
+        <div class="titleheadtext">
+            <span>Новинки</span>
+        </div>
+
+        <div class="titledivtext">
+            <span>Новое в продаже</span>
+        </div>
+    </div>
+
+    <div class="itemspanel">
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/2_1.png">
+                    <div class="itemstatusnewlable">Новинка</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span>350 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>Ж. Верн</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Таинственный остров</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/2_2.png">
+                    <div class="itemsalelable">50%</div>
+                    <div class="itemstatusnewlable">Новинка</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span><s>350 ₽</s></span>
+                        </div>
+
+                        <div class="saleprice">
+                            <span>175 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>М. Горький</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Детство. В людях. Мои университеты</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/2_3.png">
+                    <div class="itemsalelable">50%</div>
+                    <div class="itemstatusnewlable">Новинка</div>
+                    <div class="itemstatusbestlable">Бестселлер</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span><s>350 ₽</s></span>
+                        </div>
+
+                        <div class="saleprice">
+                            <span>175 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>И. Ильф, Е. Петров </span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Двенадцать стульев</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/2_4.png">
+                    <div class="itemstatusnewlable">Новинка</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span>350 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>А.Н. Стругацкий, Б.Н. Стругацкий</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Пикник на обочине. <br>Время выбора</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Preorder-->
+    <div id="preorder"></div>
+    <div class="titlepanel">
+        <div class="titleheadtext">
+            <span>Предзаказ</span>
+        </div>
+
+        <div class="titledivtext">
+            <span>Скоро в продаже</span>
+        </div>
+    </div>
+
+    <div class="itemspanel">
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/3_1.png">
+                    <div class="itemstatuspreorderlable">Предзаказ</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span>350 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>А.П. Чехов</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Юмористические рассказы</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/3_2.png">
+                    <div class="itemstatuspreorderlable">Предзаказ</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span>350 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>Н.В. Гоголь</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Собрание сочинений в 3 томах</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/3_3.png">
+                    <div class="itemstatuspreorderlable">Предзаказ</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span>350 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>Ф.М. Достоевский</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Преступление и наказание</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="itemcard">
+            <div id="one-buy-card">
+                <div class="itemimage">
+                    <img src="images/3_4.png">
+                    <div class="itemstatuspreorderlable">Предзаказ</div>
+
+                    <div class="pricetext">
+                        <div class="defaultprice">
+                            <span>350 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="itemcardtextbackground">
+                    <div class="itemautortext">
+                        <span>Ф.И. Тютчев</span>
+                    </div>
+
+                    <div class="itemtitletext">
+                        <span>Сброник стихотворений</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <ul class="footerlist">
+            <li><a href="support.html" style="text-decoration: none"> Служба поддержки</a></li>
+            <li><a href="" style="text-decoration: none"> О нас</a></li>
+            <li><a href="license-agreement.html" style="text-decoration: none"> Издательствам</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Контакты</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Политика конфиденциальности</a></li>
+        </ul>
+
+        <div class="copyright">
+            <span>&copy Онлайн книжный магазин</span>
+        </div>
+    </div>
+
+    <script>
+        function scrollToDiv(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+
+    <!--UI Update and Log Out-->
+    <script>
+        async function fetchUser() {
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                console.error('The token was not found. Please complete the authentication.');
+                updateUI(null);
+                return;
+            }
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            try {
+                const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/user', options);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('User data:', data);
+                    updateUI(data);
+                }
+                else {
+                    console.error('Error receiving user data:', data);
+                    updateUI(null);
+                }
+            }
+            catch (error) {
+                console.error('Network error:', error);
+                updateUI(null);
+            }
+        }
+
+        const updateUI = (user) => {
+            const authStatus = document.querySelector('.authStatus span');
+            const authButton = document.querySelector('.submenu-item-auth');
+            const registrationButton = document.querySelector('.submenu-item-reg');
+
+            if (user) {
+                const username = user.displayName;
+                authStatus.textContent = `Привет, ${username}!`;
+                authButton.textContent = 'Выход';
+                authButton.onclick = logout;
+                registrationButton.textContent = 'Настройки аккаунта';
+                registrationButton.onclick = accountSettings;
+            }
+            else {
+                authStatus.textContent = 'Привет, гость!';
+                authButton.textContent = 'Аутентификация';
+                authButton.onclick = authenticationButton;
+                registrationButton.textContent = 'Регистрация';
+                registrationButton.onclick = accountRegistration;
+            }
+        };
+
+        const logout = async () => {
+            const token = localStorage.getItem('authToken');
+            const refreshToken = localStorage.getItem('refreshToken');
+
+            if (!token || !refreshToken) {
+                console.error('Tokens are not found in localStorage.');
+                updateUI(null);
+                return;
+            }
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ all: false, refreshToken: refreshToken })
+            };
+
+            try {
+                const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/signout', options);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('User  signed out:', data);
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('refreshToken');
+                    updateUI(null);
+                }
+                else {
+                    console.error('Logout error:', data);
+                }
+            }
+            catch (err) {
+                console.error('Network error:', err.message);
+            }
+        };
+
+        const accountSettings = () => {
+            console.log('Navigating to account settings...');
+        };
+
+        const accountRegistration = () => {
+            console.log('Navigating to registration...');
+            window.location.href = 'registration.html';
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUser();
+        });
+    </script>
+</body>
+</html>

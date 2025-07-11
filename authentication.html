@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аутентификация</title>
+    <link rel="stylesheet" href="mainstyle.css">
+    <link rel="stylesheet" href="authentication.css">
+</head>
+
+<body>
+    <div class="paneltitle">
+        <div class="titleheadtext">
+            <span>Аутентификация</span>
+        </div>
+
+        <div class="titledivtext">
+            <span>Войти в личный кабинет</span>
+        </div>
+    </div>
+
+    <form id="authenticationForm">
+        <div class="linklogo">
+            <a href="index.html">
+                <div>
+                    <img src="images/logo_center.png" alt="logo">
+                </div>
+            </a>
+        </div>
+
+        <label for="email" class="authentication-label">E-mail:</label><br>
+        <input type="email" id="email" name="email" class="authentication-input" required>
+
+        <label for="password" class="authentication-label">Пароль:</label><br>
+        <input type="password" id="password" name="name" class="authentication-input" required><br>
+
+        <span class="error-text"></span>
+
+        <input type="submit" value="Войти" class="authentication-button"><br>
+
+        <u class="registrationtext" style="cursor: pointer; " onclick="registrationLink()">Ещё нет учётной записи? Создайте новую!</u><br>
+        <u class="passresettext" style="cursor: pointer;">Забыли свой пароль?</u>
+
+        <script>
+            function registrationLink() {
+                window.location.href = 'registration.html';
+            }
+        </script>
+    </form>
+
+    <div class="footer">
+        <ul class="footerlist">
+            <li><a href="support.html" style="text-decoration: none"> Служба поддержки</a></li>
+            <li><a href="" style="text-decoration: none"> О нас</a></li>
+            <li><a href="license-agreement.html" style="text-decoration: none"> Издательствам</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Контакты</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Политика конфиденциальности</a></li>
+        </ul>
+
+        <div class="copyright">
+            <span>&copy Онлайн книжный магазин</span>
+        </div>
+    </div>
+
+    <!--Authentication-->
+    <script>
+        document.getElementById('authenticationForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorText = document.querySelector('.error-text');
+
+            errorText.textContent = '';
+
+            if (!email || !password) {
+                errorText.textContent = 'Please fill in all the fields.';
+                return;
+            }
+
+            if (password.length < 9) {
+                errorText.textContent = 'The password must contain of at least 9 characters.';
+                return;
+            }
+
+            const payload = {
+                email: email,
+                password: password
+            };
+
+            try {
+                const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/signin/email-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('Authentication successful:', data);
+
+                    const accessToken = data.session.accessToken;
+                    const refreshToken = data.session.refreshToken;
+                    localStorage.setItem('authToken', accessToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+
+                    const authToken = localStorage.getItem('authToken');
+                    const storedRefreshToken = localStorage.getItem('refreshToken');
+
+                    if (authToken && storedRefreshToken) {
+                        console.log('Authentication token:', authToken);
+                        console.log('Refresh token:', storedRefreshToken);
+                    }
+                    else {
+                        console.log('Tokens are not found in localStorage.');
+                    }
+
+                    window.location.href = 'index.html';
+                }
+                else {
+                    console.error('Authentication error:', data);
+                    errorText.textContent = 'Authentication error. Check your authentication data.';
+                }
+            }
+            catch (error) {
+                console.error('Network error:', error);
+                errorText.textContent = 'The request could not be completed. Please try again later.';
+            }
+        });
+    </script>
+
+    <!--Redirect authorized users-->
+    <script>
+        async function fetchUser() {
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                console.error('Token not found. Please complete the authentication.');
+                return;
+            }
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            try {
+                const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/user', options);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('User  data:', data);
+                    window.location.href = 'index.html';
+                }
+                else {
+                    console.error('Error receiving user data:', data);
+                }
+            }
+            catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUser();
+        });
+    </script>
+</body>
+</html>

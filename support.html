@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RelictWorld Support</title>
+    <link rel="stylesheet" href="mainstyle.css">
+    <link rel="stylesheet" href="support.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="index.html">
+                <div>
+                    <img src="images/logo.png" alt="logo">
+                </div>
+            </a>
+        </div>
+
+        <ul class="list">
+            <li><a href="#" style="text-decoration: none"> Новинки</a></li>
+            <li><a href="#" style="text-decoration: none"> Подборки</a></li>
+            <li><a href="#" style="text-decoration: none"> Эксклюзивы</a></li>
+        </ul>
+
+        <div class="actions">
+            <div class="actionsbutton">
+                Личный кабинет
+                <div class="submenu">
+                    <div class="subarrow">&#9650;</div>
+                    <div class="submenucontent">
+                        <button class="submenu-item-auth" onclick="authenticationButton()">Аутентификация</button>
+                        <button class="submenu-item-reg" onclick="registrationButton()">Регистрация</button>
+                        <button class="submenu-item" onclick="supportButton()">Служба поддержки</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function authenticationButton() {
+                    window.location.href = 'authentication.html';
+                }
+
+                function registrationButton() {
+                    window.location.href = 'registration.html';
+                }
+
+                function supportButton() {
+                    window.location.href = 'support.html';
+                }
+            </script>
+        </div>
+
+        <div class="authStatus">
+            <span class="Username">Привет, гость!</span>
+        </div>
+    </div>
+
+    <div class="paneltitle">
+        <div class="titleheadtext">
+            <span>Служба поддержки</span>
+        </div>
+
+        <div class="titledivtext">
+            <span>Мы всегда готовы помочь!</span>
+        </div>
+    </div>
+
+    <form action="mailto:daniil_rezvov@inbox.ru" method="post" enctype="text/plain" id="supportForm">
+        <label for="request-type" class="support-label">Тип заявки:</label><br>
+        <div class="request-type-dropdown">
+            <button type="button" class="request-dropdown-button">-</button>
+            <div class="request-dropdown-content">
+                <a href="#" data-value="financial">Финансовые вопросы</a>
+                <a href="#" data-value="technical">Технические проблемы</a>
+                <a href="#" data-value="other">Другое</a>
+            </div>
+            <input type="hidden" id="request-dropdown-value" name="request-dropdown-value" required>
+            <div id="priority-dropdown-error" class="error">Please select a priority!</div>
+        </div>
+
+        <label for="name" class="support-label">Имя пользователя:</label><br>
+        <input type="text" id="name" name="name" class="support-input" required>
+
+        <label for="email" class="support-label">E-mail:</label><br>
+        <input type="email" id="email" name="email" class="support-input" required><br>
+
+        <label for="message" class="support-label">Сообщение:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50" class="support-textarea" required></textarea><br>
+
+        <input type="submit" value="Send" class="support-submit-button"><br>
+        <span class="formtext">Нажимая кнопку, Вы соглашаетесь с нашей <u class="privacypolicylink" style="cursor: pointer;" onclick="policyLink()">политикой конфиденциальности</u>.</span><br>
+
+        <script>
+            function policyLink() {
+                window.location.href = 'privacy-policy.html';
+            }
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var dropdownButton = document.querySelector('.dropdown-button');
+                var dropdownContent = document.querySelector('.dropdown-content');
+                var dropdownValue = document.getElementById('dropdown-value');
+                var dropdownError = document.getElementById('dropdown-error');
+
+                dropdownButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    dropdownContent.classList.toggle('show');
+                });
+
+                dropdownContent.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (event.target.tagName === 'A') {
+                        var selectedValue = event.target.getAttribute('data-value');
+                        dropdownButton.textContent = event.target.textContent;
+                        dropdownValue.value = selectedValue;
+                        dropdownContent.classList.remove('show');
+                        dropdownError.style.display = 'none';
+                        console.log('Selected value: ' + selectedValue);
+                    }
+                });
+
+                window.addEventListener('click', function (event) {
+                    if (!event.target.matches('.dropdown-button') && !event.target.closest('.dropdown-content')) {
+                        if (dropdownContent.classList.contains('show')) {
+                            dropdownContent.classList.remove('show');
+                        }
+                    }
+                });
+
+                document.getElementById('supportForm').addEventListener('submit', function (event) {
+                    if (!dropdownValue.value.trim()) {
+                        dropdownError.style.display = 'block';
+                        dropdownError.focus();
+                        event.preventDefault();
+                    } else {
+                        dropdownError.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var priorityDropdownButton = document.querySelector('.request-dropdown-button');
+                var priorityDropdownContent = document.querySelector('.request-dropdown-content');
+                var priorityDropdownValue = document.getElementById('request-dropdown-value');
+                var priorityDropdownError = document.getElementById('priority-dropdown-error');
+
+                priorityDropdownButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    priorityDropdownContent.classList.toggle('show');
+                });
+
+                priorityDropdownContent.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (event.target.tagName === 'A') {
+                        var selectedValue = event.target.getAttribute('data-value');
+                        priorityDropdownButton.textContent = event.target.textContent;
+                        priorityDropdownValue.value = selectedValue;
+                        priorityDropdownContent.classList.remove('show');
+                        priorityDropdownError.style.display = 'none';
+                        console.log('Selected priority: ' + selectedValue);
+                    }
+                });
+
+                window.addEventListener('click', function (event) {
+                    if (!event.target.matches('.request-dropdown-button') && !event.target.closest('.request-dropdown-content')) {
+                        if (priorityDropdownContent.classList.contains('show')) {
+                            priorityDropdownContent.classList.remove('show');
+                        }
+                    }
+                });
+                document.getElementById('supportForm').addEventListener('submit', function (event) {
+                    if (!priorityDropdownValue.value.trim()) {
+                        priorityDropdownError.style.display = 'block';
+                        priorityDropdownError.focus();
+                        event.preventDefault();
+                    } else {
+                        priorityDropdownError.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+
+    </form>
+
+    <div class="footer">
+        <ul class="footerlist">
+            <li><a href="support.html" style="text-decoration: none"> Служба поддержки</a></li>
+            <li><a href="" style="text-decoration: none"> О нас</a></li>
+            <li><a href="license-agreement.html" style="text-decoration: none"> Издательствам</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Контакты</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Политика конфиденциальности</a></li>
+        </ul>
+
+        <div class="copyright">
+            <span>&copy Онлайн книжный магазин</span>
+        </div>
+    </div>
+
+    <!--UI Update (Including support request form) and Log Out-->
+    <script>
+        async function fetchUser() {
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                console.error('The token was not found. Please complete the authentication.');
+                updateUI(null);
+                return;
+            }
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            try {
+                const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/user', options);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('User data:', data);
+                    document.getElementById('name').value = data.displayName || '';
+                    document.getElementById('email').value = data.email || '';
+                    updateUI(data);
+                }
+                else {
+                    console.error('Error receiving user data:', data);
+                    updateUI(null);
+                }
+            }
+            catch (error) {
+                console.error('Network error:', error);
+                updateUI(null);
+            }
+        }
+
+        const updateUI = (user) => {
+            const authStatus = document.querySelector('.authStatus span');
+            const authButton = document.querySelector('.submenu-item-auth');
+            const registrationButton = document.querySelector('.submenu-item-reg');
+
+            if (user) {
+                const username = user.displayName;
+                authStatus.textContent = `Привет, ${username}!`;
+                authButton.textContent = 'Выход';
+                authButton.onclick = logout;
+                registrationButton.textContent = 'Настройки аккаунта';
+                registrationButton.onclick = accountSettings;
+            }
+            else {
+                authStatus.textContent = 'Привет, гость!';
+                authButton.textContent = 'Аутентификация';
+                authButton.onclick = authenticationButton;
+                registrationButton.textContent = 'Регистрация';
+                registrationButton.onclick = accountRegistration;
+            }
+        };
+
+        const logout = async () => {
+            const token = localStorage.getItem('authToken');
+            const refreshToken = localStorage.getItem('refreshToken');
+
+            if (!token || !refreshToken) {
+                console.error('Tokens are not found in localStorage.');
+                updateUI(null);
+                return;
+            }
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ all: false, refreshToken: refreshToken })
+            };
+
+            try {
+                const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/signout', options);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('User  signed out:', data);
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('refreshToken');
+                    updateUI(null);
+                }
+                else {
+                    console.error('Logout error:', data);
+                }
+            }
+            catch (err) {
+                console.error('Network error:', err.message);
+            }
+        };
+
+        const accountSettings = () => {
+            console.log('Navigating to account settings...');
+        };
+
+        const accountRegistration = () => {
+            console.log('Navigating to registration...');
+            window.location.href = 'registration.html';
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUser();
+        });
+    </script>
+</body>
+</html>

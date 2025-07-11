@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="mainstyle.css">
+    <link rel="stylesheet" href="registration.css">
+</head>
+
+<body>
+    <div class="paneltitle">
+        <div class="titleheadtext">
+            <span>Регистрация</span>
+        </div>
+
+        <div class="titledivtext">
+            <span>Создать новую учётную запись</span>
+        </div>
+    </div>
+
+    <form id="registrationForm">
+        <div class="linklogo">
+            <a href="index.html">
+                <div>
+                    <img src="images/logo_center.png" alt="logo">
+                </div>
+            </a>
+        </div>
+
+        <label for="username" class="registration-label">Имя пользователя:</label><br>
+        <input type="text" id="username" name="username" class="registration-input" required>
+
+        <label for="email" class="registration-label">E-mail:</label><br>
+        <input type="email" id="email" name="email" class="registration-input" required>
+
+        <label for="password" class="registration-label">Пароль:</label><br>
+        <input type="password" id="password" name="name" class="registration-input" required><br>
+
+        <span class="error-text"></span>
+
+        <input type="submit" value="Продолжить" class="registration-button"><br>
+
+        <span class="formtext">Нажимая кнопку, Вы соглашаетесь с нашей <u class="privacypolicylink" style="cursor: pointer;" onclick="policyLink()">политикой конфиденциальности</u>.</span><br>
+    </form>
+
+    <div class="footer">
+        <ul class="footerlist">
+            <li><a href="support.html" style="text-decoration: none"> Служба поддержки</a></li>
+            <li><a href="" style="text-decoration: none"> О нас</a></li>
+            <li><a href="license-agreement.html" style="text-decoration: none"> Издательствам</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Контакты</a></li>
+            <li><a href="privacy-policy.html" style="text-decoration: none"> Политика конфиденциальности</a></li>
+        </ul>
+
+        <div class="copyright">
+            <span>&copy Онлайн книжный магазин</span>
+        </div>
+    </div>
+
+    <!--Registration-->
+    <script>
+        async function registerUser(userData) {
+            const response = await fetch('https://nncgxjldoqenrtvumxqm.auth.eu-central-1.nhost.run/v1/signup/email-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Registration failed');
+            }
+
+            return await response.json();
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorText = document.querySelector('.error-text');
+
+            errorText.textContent = '';
+
+            if (!email || !password) {
+                errorText.textContent = 'Please fill in all the fields.';
+                return;
+            }
+
+            if (password.length < 9) {
+                errorText.textContent = 'The password must contain at least 9 characters.';
+                return;
+            }
+
+            const userData = {
+                email: email,
+                password: password,
+                options: {
+                    allowedRoles: ["user"],
+                    defaultRole: "user",
+                    displayName: username,
+                    locale: "en",
+                    metadata: {
+                        firstName: username,
+                    },
+                }
+            };
+
+            try {
+                const result = await registerUser(userData);
+                console.log('Registration successful:', result);
+                window.location.href = 'authentication.html';
+
+            }
+            catch (error) {
+                if (error.message.includes('Registration failed')) {
+                    errorText.textContent = 'Registration error. Check your registration data.';
+                } else {
+                    console.error('Network error:', error);
+                    errorText.textContent = 'The request could not be completed. Please try again later.';
+                }
+                console.error('Error during registration:', error);
+            }
+        });
+    </script>
+</body>
+</html>
